@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173c32">
+  <meta name="description" content="Periódico digital sobre gamificación y apps ambientales, desperdicio de alimentos, reciclaje e ingeniería de software.">
+  <title>Código Circular — periódico ecológico digital</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root { --ink:#172b25; --forest:#173c32; --leaf:#b7d382; --paper:#f6f4ec; --white:#fffdf7; --muted:#6b756e; --line:#d8ddd3; --orange:#d96f4c; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { background:var(--paper); color:var(--ink); font-family:'DM Sans',sans-serif; }
+    a { color:inherit; }
+    .reading-progress { position:fixed; inset:0 auto auto 0; height:3px; width:0; background:var(--orange); z-index:1050; }
+    .masthead { background:var(--forest); color:var(--white); }
+    .topline { border-bottom:1px solid #ffffff30; font:500 .68rem 'DM Mono',monospace; letter-spacing:.12em; text-transform:uppercase; }
+    .brand { display:inline-flex; align-items:center; gap:.65rem; text-decoration:none; font-weight:700; letter-spacing:-.04em; }
+    .brand-mark { width:29px; height:29px; border:1px solid var(--leaf); border-radius:50%; display:grid; place-items:center; color:var(--leaf); font-size:.8rem; }
+    .masthead .nav-link { color:#e6ebdf; font-size:.82rem; }
+    .masthead .nav-link:hover,.masthead .nav-link:focus { color:var(--leaf); }
+    .hero { padding:clamp(3.2rem,8vw,7rem) 0 3.2rem; }
+    .eyebrow,.kicker { font:500 .7rem 'DM Mono',monospace; letter-spacing:.12em; text-transform:uppercase; color:#52685d; }
+    .hero h1 { max-width:1000px; margin:.8rem 0 1rem; font:800 clamp(3.1rem,8.6vw,7.8rem)/.92 'Playfair Display',serif; letter-spacing:-.055em; }
+    .hero h1 em { color:var(--forest); font-style:normal; }
+    .deck { max-width:710px; font-size:clamp(1.08rem,2vw,1.35rem); line-height:1.5; color:#4a5b52; }
+    .byline { color:var(--muted); font-size:.83rem; }
+    .hero-image { overflow:hidden; border-radius:4px; background:#b3aa88; }
+    .hero-image img { width:100%; height:clamp(330px,52vw,590px); object-fit:cover; display:block; }
+    .image-caption { display:flex; justify-content:space-between; gap:1rem; padding:.7rem .85rem; background:var(--white); color:var(--muted); font-size:.7rem; }
+    .image-caption span:last-child { text-align:right; }
+    .ticker { background:var(--leaf); color:var(--ink); font:500 .72rem 'DM Mono',monospace; letter-spacing:.03em; }
+    .ticker strong { text-transform:uppercase; letter-spacing:.12em; }
+    .story { padding:4.5rem 0; scroll-margin-top:80px; }
+    .section-head { border-top:1px solid var(--ink); padding-top:.65rem; margin-bottom:1.25rem; display:flex; align-items:baseline; justify-content:space-between; gap:1rem; }
+    .section-head h2 { margin:0; font:700 clamp(1.8rem,4vw,3rem)/1.05 'Playfair Display',serif; letter-spacing:-.035em; }
+    .section-no { font:500 .7rem 'DM Mono',monospace; color:var(--muted); }
+    .lead-copy { font:600 clamp(1.25rem,2vw,1.55rem)/1.42 'Playfair Display',serif; }
+    .body-copy { color:#46574e; line-height:1.75; }
+    .report-copy p { color:#46574e; font-size:1.02rem; line-height:1.78; }
+    .report-copy .opening { font:600 1.28rem/1.5 'Playfair Display',serif; color:var(--ink); }
+    .quote { border-left:4px solid var(--orange); padding:.2rem 0 .2rem 1.2rem; font:600 clamp(1.35rem,2.5vw,2rem)/1.3 'Playfair Display',serif; }
+    .stat-card { height:100%; padding:1.25rem; background:var(--white); border:1px solid var(--line); }
+    .stat-number { font:700 clamp(2.2rem,4vw,3.6rem)/1 'Playfair Display',serif; color:var(--forest); letter-spacing:-.05em; }
+    .stat-label { margin-top:.65rem; color:#536259; font-size:.85rem; line-height:1.45; }
+    .stat-source { display:block; margin-top:.8rem; font:400 .64rem 'DM Mono',monospace; color:var(--muted); }
+    .note { padding:1rem 1.1rem; background:#e8eddf; border-radius:3px; color:#435249; font-size:.84rem; line-height:1.6; }
+    .note strong { color:var(--ink); }
+    .feature-panel { background:var(--forest); color:var(--white); padding:clamp(1.3rem,4vw,2.5rem); }
+    .feature-panel .kicker { color:var(--leaf); }
+    .feature-panel h3 { font:700 clamp(1.6rem,3vw,2.5rem)/1.1 'Playfair Display',serif; }
+    .feature-panel p { color:#d5ded4; line-height:1.7; }
+    .feature-panel a { color:var(--leaf); }
+    .tgtg-image { display:block; width:100%; height:auto; min-height:0; object-fit:contain; object-position:center; border:1px solid var(--line); background:var(--white); }
+    .image-credit { font-size:.68rem; color:var(--muted); margin-top:.45rem; }
+    .metric-table { border-top:1px solid var(--line); }
+    .metric-row { display:grid; grid-template-columns:1fr 1fr; gap:1.3rem; padding:1rem .2rem; border-bottom:1px solid var(--line); font-size:.87rem; }
+    .metric-row span:first-child { color:var(--muted); }
+    .metric-row span:last-child { font-weight:600; }
+    .city-card { height:100%; padding:1.5rem; background:#e8eddf; }
+    .city-card.dark { background:var(--forest); color:var(--white); }
+    .city-card.dark .kicker,.city-card.dark p { color:#d5ded4; }
+    .city-card .big { display:block; margin:.35rem 0; font:700 clamp(2.3rem,5vw,4rem)/.98 'Playfair Display',serif; letter-spacing:-.05em; }
+    .chain { display:flex; align-items:stretch; gap:.5rem; }
+    .chain-step { flex:1; padding:1rem; background:var(--white); border:1px solid var(--line); min-height:145px; }
+    .chain-step b { display:block; color:var(--forest); font:600 .68rem 'DM Mono',monospace; letter-spacing:.07em; text-transform:uppercase; }
+    .chain-step span { display:block; margin-top:.6rem; font:600 1rem/1.3 'Playfair Display',serif; }
+    .chain-arrow { display:grid; place-items:center; color:var(--orange); font-size:1.2rem; }
+    .pill { display:inline-block; padding:.4rem .7rem; border:1px solid #829284; border-radius:50px; color:#45574c; font-size:.72rem; }
+    .editorial-card { height:100%; padding:1.4rem; background:var(--white); border:1px solid var(--line); }
+    .editorial-card h3 { font:700 1.45rem/1.12 'Playfair Display',serif; }
+    .editorial-card p { color:#46574e; font-size:.9rem; line-height:1.7; }
+    .editorial-card .sign { display:block; margin-top:1rem; font:500 .68rem 'DM Mono',monospace; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); }
+    .interview { padding:1.35rem; border-left:3px solid var(--leaf); background:var(--white); height:100%; }
+    .interview h3 { font:700 1.25rem 'Playfair Display',serif; }
+    .interview p { margin:.45rem 0; color:#46574e; font-size:.88rem; line-height:1.65; }
+    .bar-wrap { background:#dfe5d9; height:28px; overflow:hidden; border-radius:2px; }
+    .bar-fill { height:100%; background:var(--forest); width:18.1%; }
+    .recipe-step { display:flex; gap:.75rem; padding:.8rem 0; border-bottom:1px solid var(--line); color:#46574e; }
+    .recipe-step b { color:var(--orange); font:500 .75rem 'DM Mono',monospace; }
+    .prototype { background:#e8eddf; padding:clamp(1.3rem,4vw,2.4rem); }
+    .prototype h3 { font:700 1.2rem 'Playfair Display',serif; }
+    .prototype .form-label { font-size:.78rem; font-weight:600; }
+    .prototype-output { background:var(--forest); color:var(--white); padding:1rem; min-height:91px; }
+    .prototype-output strong { display:block; font:700 1.65rem 'Playfair Display',serif; }
+    .project-field { padding:.9rem 0; border-bottom:1px solid #cbd5c7; font-size:.87rem; line-height:1.6; }
+    .project-field strong { display:block; margin-bottom:.15rem; color:var(--forest); font:500 .68rem 'DM Mono',monospace; letter-spacing:.07em; text-transform:uppercase; }
+    .sources { background:#e9e8df; padding:2rem; }
+    .sources a { color:#315447; text-decoration-thickness:1px; text-underline-offset:3px; }
+    .sources li { margin:.45rem 0; font-size:.79rem; line-height:1.5; }
+    footer { background:var(--forest); color:#e6ebdf; }
+    footer .small { color:#c2cec1; }
+    .back-top { text-decoration:none; color:var(--leaf); font-size:.8rem; }
+    @media (max-width:767.98px) {
+      .hero { padding-top:3rem; }
+      .story { padding:3.3rem 0; }
+      .metric-row { grid-template-columns:1fr; gap:.3rem; }
+      .chain { flex-direction:column; }
+      .chain-step { min-height:auto; }
+      .chain-arrow { transform:rotate(90deg); height:16px; }
+      .image-caption { flex-direction:column; }
+      .image-caption span:last-child { text-align:left; }
+    }
+    @media print {
+      @page { size:A4; margin:15mm 14mm; }
+      body { background:white; font-size:10pt; }
+      .masthead nav,.reading-progress,.print-control,.ticker a { display:none!important; }
+      .masthead { print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+      .hero,.sources,.prototype,.editorial-card,.interview,.feature-panel,.stat-card { break-inside:avoid; }
+      .story { padding:1.1rem 0; }
+      a { color:inherit; text-decoration:none; }
+      .hero-image img { height:280px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="reading-progress" id="readingProgress" aria-hidden="true"></div>
+  <header class="masthead">
+    <div class="container">
+      <div class="topline py-2 d-flex justify-content-between"><span>Periódico ecológico digital · Ingeniería de Software</span><span>Edición 01 · SIN FECHA</span></div>
+      <nav class="navbar navbar-expand-lg navbar-dark py-3" aria-label="Navegación principal">
+        <a class="brand text-white" href="#inicio"><span class="brand-mark">↗</span><span>CÓDIGO CIRCULAR</span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Abrir navegación"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse justify-content-end" id="mainNav"><ul class="navbar-nav gap-lg-3 mt-3 mt-lg-0">
+          <li class="nav-item"><a class="nav-link" href="#reportaje">Reportaje</a></li><li class="nav-item"><a class="nav-link" href="#ia-carrera">IA y carrera</a></li><li class="nav-item"><a class="nav-link" href="#voces">Voces</a></li><li class="nav-item"><a class="nav-link" href="#proyecto">Proyecto</a></li><li class="nav-item"><a class="nav-link" href="#prototipo">Prototipo</a></li>
+        </ul></div>
+        <button class="btn btn-sm btn-outline-light ms-lg-3 print-control" onclick="window.print()">Guardar / imprimir PDF</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="inicio">
+    <section class="container hero">
+      <div class="eyebrow">Gamificación · consumo · reciclaje</div>
+      <h1>¿Las apps pueden<br><em>cambiar lo que tiramos?</em></h1>
+      <p class="deck">El código también pesa sobre el planeta. Una aplicación puede orientar decisiones, pero el impacto aparece cuando se conecta con una ruta, una báscula y las personas que ya hacen el trabajo.</p>
+      <div class="byline mb-4">Edición 01 · SIN FECHA · Grupo de Ingeniería de Software</div>
+      <figure class="hero-image m-0">
+        <img src="assets/mercado-y-reciclaje.png" alt="Una compradora guarda verduras frescas mientras, al fondo, un reciclador pesa cartón en un punto de acopio barrial." fetchpriority="high">
+        <figcaption class="image-caption"><span>Del alimento rescatado al material recuperado: el cambio necesita una cadena completa.</span><span>Ilustración generada con IA; no es una fotografía documental.</span></figcaption>
+      </figure>
+    </section>
+    <div class="ticker py-3"><div class="container d-flex flex-wrap gap-3 align-items-center"><strong>La cifra de portada</strong><span>12.149.386 toneladas de residuos se dispusieron en Colombia en 2024. <a href="#fuentes">Fuente [1]</a></span></div></div>
+
+    <section class="story" id="reportaje">
+      <article class="container">
+        <div class="section-head"><h2>Reportaje central · El cambio no cabe en una descarga</h2><span class="section-no">01 / INVESTIGACIÓN</span></div>
+        <div class="row g-4 g-lg-5">
+          <div class="col-lg-8 report-copy">
+            <p class="opening">Una aplicación ambiental puede hacer visible una decisión cotidiana: rescatar comida, separar residuos o ahorrar energía. La pregunta difícil es otra: ¿el cambio sigue ocurriendo cuando se acaba la novedad, el premio o la notificación?</p>
+            <p>En Colombia, durante 2024 se reportaron 12.149.386 toneladas de residuos dispuestas, 2,93 % más que en 2023 [1]. En el sistema formal también se registraron 2.987.271 toneladas aprovechadas [2]. Son flujos distintos: el material separado y recuperado no es basura que primero haya llegado al relleno para luego descontarse. Por eso, cada porcentaje de aprovechamiento debe indicar qué se contó y cuál fue su denominador.</p>
+            <p>Las aplicaciones de consumo muestran esa diferencia entre promesa y resultado. Too Good To Go ofrece bolsas sorpresa con excedentes de comercios. La idea puede evitar que comida apta termine en la basura, pero las descargas o los usuarios registrados no revelan cuánto se habría desechado sin la compra. Un análisis de Berkeley Haas advierte que parte del desperdicio podría trasladarse del comercio al hogar si el comprador adquiere más de lo que va a consumir; también señala que algunos negocios podrían ajustar su producción al anticipar ventas [3]. Es una hipótesis relevante para evaluar, no una condena automática de la herramienta.</p>
+            <p>La misma exigencia aplica al reciclaje. En el Huila se dispusieron en promedio 548,33 toneladas diarias en 2024 [1]. En Neiva, Ciudad Limpia recogía entre 290 y 300 toneladas al día según un reporte operativo de octubre de 2026 [4]. La auditoría de la CAM estima la vida útil del relleno Los Ángeles hasta 2034 [5]. Ninguna interfaz por sí sola resuelve la separación en la fuente ni las condiciones de trabajo de los recicladores.</p>
+            <p>La evidencia sobre cambio de comportamiento ofrece pistas, con límites. En una evaluación de informes de energía para 600.000 hogares, el consumo bajó en promedio 2 % [6]. El mecanismo central era mostrar consumo medido y compararlo con hogares similares, no repartir insignias. El aprendizaje para el diseño digital es conectar la retroalimentación con una acción concreta y con datos verificables.</p>
+            <p>Para un piloto local, eso significa registrar el peso real de cada entrega, comprobar la contaminación del material y comparar los resultados con un barrio de control. También exige una alternativa para quienes no tienen datos móviles y la participación de las organizaciones recicladoras en las decisiones. La tecnología debe reducir fricciones y mejorar la coordinación; si no cambia la operación real, su tablero solo cuenta interacciones.</p>
+            <p class="mb-0"><strong>La conclusión:</strong> una app puede apoyar hábitos ambientales, pero su impacto depende del contexto, la logística y la medición. El indicador importante no es cuántas personas tocaron la pantalla, sino qué cambió en el mundo y durante cuánto tiempo.</p>
+          </div>
+          <aside class="col-lg-4">
+            <div class="quote">“La app es la última milla de una cadena. Sin la cadena, es humo.”</div>
+            <div class="small text-secondary mt-2">Idea central del grupo</div>
+            <div class="mt-4 stat-card"><div class="stat-number">548,33 t</div><div class="stat-label">dispuestas diariamente en promedio en el Huila durante 2024.</div><small class="stat-source">Superservicios [1]</small></div>
+            <div class="note mt-3"><strong>Nota de verificación local:</strong> las diapositivas mencionaban 2053 para Los Ángeles. La auditoría de la CAM estima 2034; la página usa el dato más reciente disponible y lo presenta como estimación, no como cierre confirmado [5].</div>
+          </aside>
+        </div>
+      </article>
+    </section>
+
+    <section class="story pt-0" id="apps">
+      <div class="container">
+        <div class="section-head"><h2>Una app bajo la lupa</h2><span class="section-no">CONTEXTO DEL CASO</span></div>
+        <div class="row g-4 align-items-stretch">
+          <div class="col-lg-5"><img class="tgtg-image" src="assets/image16.png" alt="Infografía de Too Good To Go incluida en las diapositivas del grupo, con cifras comunicadas por la empresa."><div class="image-credit">Imagen del material del grupo. Las cifras corporativas describen alcance, no impacto independiente.</div></div>
+          <div class="col-lg-7"><div class="feature-panel h-100"><div class="kicker mb-2">Too Good To Go · consumo</div><h3>Una bolsa sorpresa puede rescatar excedentes. La prueba es saber qué habría pasado sin ella.</h3><p>La app conecta a compradores con comercios que ofrecen alimentos sobrantes. Berkeley Haas plantea dos preguntas para medir el efecto: ¿la venta evitó que el comercio botara esos productos?, y ¿el comprador consumió lo adquirido o terminó desechándolo en casa?</p><p>El análisis también distingue contextos de negocio: la posibilidad de reducir desperdicio puede cambiar según el margen del comercio y el perfil del consumidor. Las cifras de comidas “salvadas” o de CO₂ evitado requieren metodología transparente para convertirse en evidencia comparable.</p><p class="mb-2"><strong>Lectura:</strong> plausible, pero dependiente del contexto; medir excedente, venta y desperdicio posterior antes de atribuir todo el beneficio a la app.</p><a href="https://alumni.berkeley.edu/california-magazine/2025-fall-winter/lost-leftovers/" target="_blank" rel="noopener">Análisis de Berkeley Haas [3] ↗</a></div></div>
+        </div>
+        <div class="row g-4 mt-3 align-items-center"><div class="col-lg-6"><h3 class="h4" style="font-family:'Playfair Display',serif">De la métrica bonita a la evidencia</h3><div class="metric-table"><div class="metric-row"><span>La app muestra</span><span>Lo que se debe medir</span></div><div class="metric-row"><span>Usuarios registrados</span><span>Actividad que se mantiene a 30 y 90 días</span></div><div class="metric-row"><span>Comidas “salvadas”</span><span>Desperdicio evitado en comercio y hogar</span></div><div class="metric-row"><span>CO₂ evitado estimado</span><span>Supuestos, método y límites publicados</span></div></div></div><div class="col-lg-6"><div class="note"><strong>Lección de Opower:</strong> comparar consumo real con hogares similares ayudó a reducir energía. La evaluación de J-PAL encontró una disminución promedio de 2 % en 600.000 hogares [6]. Es una palanca útil para diseñar retroalimentación, no una prueba de que cualquier sistema de puntos funcione.</div></div></div>
+      </div>
+    </section>
+
+    <section class="story" id="ia-carrera">
+      <div class="container">
+        <div class="section-head"><h2>IA y mi carrera</h2><span class="section-no">02 / INGENIERÍA DE SOFTWARE</span></div>
+        <p class="lead-copy col-lg-9">La inteligencia artificial puede ayudar a ordenar la información y automatizar tareas, pero la decisión de qué medir, a quién incluir y qué impacto aceptar sigue siendo de quienes diseñan el sistema.</p>
+        <div class="row g-3 mt-2">
+          <div class="col-lg-4"><div class="editorial-card"><div class="kicker mb-2">01 · Usos profesionales</div><h3>IA para observar patrones, con supervisión</h3><p>En ingeniería de software ya se usan asistentes de IA para proponer fragmentos de código, generar casos de prueba y resumir errores. En una solución de reciclaje también se podrían explorar modelos para clasificar imágenes de materiales o anticipar volúmenes por ruta. Esos resultados sirven como apoyo: una persona debe confirmar las etiquetas, corregir fallos y verificar el peso en báscula. El modelo no puede decidir por sí solo que una entrega fue recuperada ni atribuirle una reducción de residuos sin medición.</p></div></div>
+          <div class="col-lg-4"><div class="editorial-card"><div class="kicker mb-2">02 · Propuesta práctica</div><h3>Software liviano y trazable</h3><p>Para el piloto de Neiva proponemos una herramienta web de bajo consumo que registre hogar, ruta, tipo de material, peso verificado y rechazo por contaminación. La interfaz mostraría retroalimentación sencilla por barrio, sin publicar nombres ni ubicaciones exactas. SMS o un registro asistido por la organización recicladora permitirían participar sin instalar una app. El equipo compararía el cambio con un barrio de control y reportaría el método, los datos faltantes y los resultados negativos. La arquitectura debe guardar solo lo necesario y medir su propio consumo de recursos.</p></div></div>
+          <div class="col-lg-4"><div class="editorial-card"><div class="kicker mb-2">03 · Riesgos ambientales y éticos</div><h3>Lo eficiente también debe rendir cuentas</h3><p>Primero, entrenar y ejecutar modelos requiere electricidad: la IEA estima que el consumo eléctrico de centros de datos creció cerca de 12 % anual desde 2017 y proyecta que siga aumentando; no significa que cada app emita ese porcentaje de CO₂ [9]. Segundo, fotos, direcciones y horarios pueden revelar rutinas de hogares y recicladores. La Ley 1581 protege los datos personales y exige cuidado en su tratamiento [10]. Tercero, un modelo entrenado con datos incompletos puede clasificar mal materiales o invisibilizar rutas informales. Por eso hacen falta minimización de datos, revisión humana y una opción no digital.</p></div></div>
+        </div>
+        <p class="small text-secondary mt-3">El estándar Software Carbon Intensity (ISO/IEC 21031:2024) ofrece una metodología para medir la intensidad de carbono del software [11].</p>
+      </div>
+    </section>
+
+    <section class="story pt-0" id="voces">
+      <div class="container">
+        <div class="section-head"><h2>Voces del territorio</h2><span class="section-no">03 / PERSPECTIVAS</span></div>
+        <div class="note mb-3"><strong>Transparencia:</strong> estas dos mini-entrevistas son simuladas con fines académicos; representan roles y dilemas posibles, no testimonios reales ni citas de personas entrevistadas.</div>
+        <div class="row g-3">
+          <div class="col-md-6"><div class="interview"><div class="kicker">Rol simulado · recicladora de oficio</div><h3>“Que el sistema registre mi trabajo, no que me quite la ruta”</h3><p><strong>Pregunta:</strong> ¿Qué tendría que ofrecer una herramienta para servirle?</p><p><strong>Respuesta simulada:</strong> “Que el peso quede claro y que yo pueda revisar el registro. La ruta y el pago deben coordinarse con la organización. Si necesito datos todo el día o si los hogares se asignan sin contar con nosotros, la app no ayuda. Una llamada o un mensaje también puede funcionar.”</p></div></div>
+          <div class="col-md-6"><div class="interview"><div class="kicker">Rol simulado · residente de un barrio de Neiva</div><h3>“Díganme qué separar y cuándo pasan”</h3><p><strong>Pregunta:</strong> ¿Qué haría más fácil separar residuos en casa?</p><p><strong>Respuesta simulada:</strong> “Instrucciones simples, saber qué sí reciben y que la recolección llegue el día acordado. Los puntos pueden motivar al principio, pero prefiero ver cuántos kilos recuperamos en el barrio y saber si lo que separé realmente se aprovechó.”</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story" id="debate">
+      <div class="container">
+        <div class="section-head"><h2>Debate cruzado</h2><span class="section-no">04 / DOS POSTURAS</span></div>
+        <div class="row g-3">
+          <div class="col-lg-6"><article class="editorial-card"><div class="kicker">A favor de usar apps</div><h3>La tecnología puede hacer visible una acción que antes pasaba desapercibida</h3><p>Una aplicación bien conectada puede bajar la fricción de separar residuos: recuerda el día de recolección, explica qué materiales sirven, registra un pesaje y devuelve información útil al hogar. También puede ayudar a una organización recicladora a coordinar rutas y documentar el material recuperado. No hace falta que cambie a toda la ciudad para ser valiosa; un piloto transparente puede mostrar dónde funciona y para quién. La comparación entre barrios permite aprender y ajustar antes de ampliar el sistema. El riesgo de exagerar el impacto no obliga a abandonar la tecnología: obliga a diseñarla con metas, acceso sin datos y participación de quienes conocen la operación.</p><span class="sign">Firmado: Juan Esteban Parra</span></article></div>
+          <div class="col-lg-6"><article class="editorial-card"><div class="kicker">Crítica al solucionismo digital</div><h3>Una interfaz no puede sustituir la infraestructura ni la justicia</h3><p>Las apps prometen empoderar al consumidor, pero pueden convertir un problema de producción y servicios públicos en una obligación individual. Si no hay rutas confiables, puntos de acopio y remuneración justa, acumular insignias solo maquilla la falta de resultados. Un registro digital incluso puede excluir a hogares sin conectividad o dar control sobre las rutas a actores que no reconocen a los recicladores de oficio. Antes de desplegar otra plataforma, hay que probar que responde a una necesidad real, comparar sus resultados con una alternativa simple y publicar quién se beneficia. La tecnología merece un lugar cuando acompaña la organización comunitaria y rinde cuentas; no debe presentarse como solución automática.</p><span class="sign">Firmado: Andrés Mauricio Fierro</span></article></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story pt-0" id="secciones">
+      <div class="container">
+        <div class="section-head"><h2>Dos secciones para llevar a la práctica</h2><span class="section-no">05 / SECCIONES ESPECIALES</span></div>
+        <div class="row g-4">
+          <div class="col-lg-6"><div class="editorial-card"><div class="kicker">La cifra del día · Colombia, 2024</div><h3 class="mt-2"><span class="stat-number">45</span> sitios con vida útil vencida</h3><p>De 249 sitios de disposición final reportados, 45 tenían la vida útil vencida. La cifra recuerda que recuperar materiales antes de que lleguen al relleno es parte de la gestión de residuos.</p><div class="bar-wrap" role="img" aria-label="45 de 249 sitios, aproximadamente el 18 por ciento"><div class="bar-fill"></div></div><div class="d-flex justify-content-between small text-secondary mt-2"><span>45 con vida útil vencida</span><span>249 sitios reportados [1]</span></div><small class="stat-source">Visualización: 45 ÷ 249 ≈ 18,1 %. Fuente original: Superservicios [1].</small></div></div>
+          <div class="col-lg-6"><div class="editorial-card"><div class="kicker">Receta verde · rescate y separación</div><h3 class="mt-2">Cinco pasos para que el excedente no termine en la basura</h3><div class="recipe-step"><b>01</b><span>Antes de comprar, revisa lo que ya tienes y planea cuándo lo vas a consumir.</span></div><div class="recipe-step"><b>02</b><span>Si rescatas una bolsa de excedentes, verifica su contenido y comparte lo que no vayas a usar a tiempo.</span></div><div class="recipe-step"><b>03</b><span>Separa reciclables limpios y secos de los residuos orgánicos y sanitarios.</span></div><div class="recipe-step"><b>04</b><span>Consulta a la organización o ruta local qué materiales recibe y en qué horario.</span></div><div class="recipe-step"><b>05</b><span>Pregunta qué pasó con el material; una entrega solo cuenta como aprovechada cuando se verifica.</span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story" id="historia">
+      <div class="container">
+        <div class="section-head"><h2>Historia que inspira</h2><span class="section-no">06 / CASO POSITIVO</span></div>
+        <div class="row g-4 align-items-center">
+          <div class="col-lg-4"><div class="stat-card"><div class="stat-number">26 kWh</div><div class="stat-label">menos consumo mensual promedio en los hogares de quienes participaron, frente a hogares comparables.</div><small class="stat-source">Cool Choices · estudio en Journal of Environmental Psychology, 2017 [8]</small></div></div>
+          <div class="col-lg-8"><p class="lead-copy">Cool Choices llevó un juego de sostenibilidad a lugares de trabajo y equipos. Un estudio reportó ahorro de energía en los hogares de los participantes, que se mantenía seis meses después de terminar el juego [8].</p><p class="body-copy">El caso no demuestra que cualquier ranking o insignia cambie hábitos. Su valor está en conectar acciones concretas, conversación entre pares y medición del consumo. Es una historia positiva con una lección útil: diseñar para que la conducta se integre a la vida cotidiana y comprobar el resultado después de que acaba la recompensa.</p><a href="https://news.wisc.edu/healthy-competition-makes-habit-of-sustainability/" target="_blank" rel="noopener">Universidad de Wisconsin–Madison: historia y estudio [8] ↗</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story pt-0" id="proyecto">
+      <div class="container">
+        <div class="section-head"><h2>Proyecto en una página · Neiva Circular</h2><span class="section-no">07 / PROPUESTA Y PROTOTIPO</span></div>
+        <p class="lead-copy col-lg-9">Un piloto de separación en la fuente con trazabilidad de materiales, operado con recicladores de oficio y evaluado frente a un barrio de comparación.</p>
+        <div class="row g-4 mt-2">
+          <div class="col-lg-6"><div class="prototype h-100" id="prototipo">
+            <div class="project-field"><strong>Problema</strong>En 2024 Colombia dispuso 12.149.386 t [1]; el Huila, 548,33 t/día [1]; en Neiva se recogían 290–300 t/día en octubre de 2026 [4]. La separación y el aprovechamiento deben ocurrir antes de que los residuos se mezclen.</div>
+            <div class="project-field"><strong>Decisión técnica</strong>El dato central es el peso verificado y su trazabilidad; las descargas no son indicador principal. Una báscula operada por la organización valida el registro, que puede sincronizarse cuando haya conexión.</div>
+            <div class="project-field"><strong>Usuario y contexto</strong>Hogares de un barrio, recicladores y organización local. La conectividad es desigual; habrá SMS o registro asistido, y no se exigirá GPS continuo.</div>
+            <div class="project-field"><strong>Solución y prototipo</strong>Esta página incluye una calculadora demostrativa para estimar kilos netos a partir de peso registrado y rechazo. Aún falta conectar básculas, rutas y organizaciones; el prototipo no almacena registros ni representa una operación real.</div>
+            <div class="project-field"><strong>Métrica, línea base y meta propuesta</strong>Indicador: kg netos verificados por hogar al mes. Línea base: medir durante cuatro semanas antes de activar la retroalimentación. Meta del piloto: lograr al día 90 al menos 20 % más kg netos por hogar que el barrio de control, sin elevar la tasa de rechazo.</div>
+            <div class="project-field"><strong>Riesgo principal y respuesta</strong>Material contaminado o exclusión de recicladores y hogares sin datos. Mitigación: definir reglas con la organización recicladora, revisar pesajes, ofrecer canal asistido y comparar participación e ingresos además del peso.</div>
+            <div class="mt-3 small">Responsables propuestos: Alcaldía de Neiva (PGIRS), empresa de aseo, organización de recicladores y estudiantes/semilleros de la Universidad Surcolombiana.</div>
+          </div></div>
+          <div class="col-lg-6"><div class="prototype h-100">
+            <div class="kicker">Prototipo navegable · calculadora de pesaje</div><h3 class="mt-2">¿Cuánto material neto se recuperó?</h3>
+            <p class="small text-secondary">Ingresa datos de ejemplo o de una jornada real. El cálculo no valida básculas ni guarda información.</p>
+            <div class="mb-3"><label class="form-label" for="weightInput">Peso recibido en báscula (kg)</label><input class="form-control" type="number" id="weightInput" min="0" step="0.1" value="0" inputmode="decimal"></div>
+            <div class="mb-3"><label class="form-label" for="rejectInput">Porcentaje rechazado por contaminación (%)</label><input class="form-control" type="number" id="rejectInput" min="0" max="100" step="1" value="0" inputmode="decimal"></div>
+            <div class="mb-3"><label class="form-label" for="householdsInput">Hogares participantes</label><input class="form-control" type="number" id="householdsInput" min="1" step="1" value="1" inputmode="numeric"></div>
+            <div class="prototype-output" aria-live="polite"><span>Material neto estimado · kg por hogar</span><strong id="netOutput">0,0 kg · 0,0 kg/hogar</strong></div>
+            <p class="small text-secondary mt-3 mb-0">Fórmula: peso recibido × (1 − rechazo) ÷ hogares. Resultado ilustrativo; la medición real requiere validación del pesaje y del material.</p>
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="story pt-0" id="cierre">
+      <div class="container">
+        <div class="section-head"><h2>Cierre · lo que aprendimos</h2><span class="section-no">08 / CRÉDITOS</span></div>
+        <div class="row g-4">
+          <div class="col-lg-7"><p class="lead-copy">Una app puede ayudar a cambiar una conducta cuando está conectada con una operación real, mide resultados físicos y escucha a las personas afectadas.</p><p class="body-copy">En ingeniería de software, decidir qué se mide, qué datos se recolectan, quién puede participar y cómo se comunica la incertidumbre forma parte de construir la solución. El piloto debe publicar sus resultados, incluidos los que no alcancen la meta.</p><p class="small"><strong>Créditos editoriales:</strong> Juan Esteban Parra, Andrés Mauricio Fierro y Kevin David Rodríguez. Periódico académico sobre gamificación y apps ambientales.</p></div>
+          <div class="col-lg-5"><div class="note"><strong>Declaración de uso de IA:</strong> Gemini se usó en el material de contexto compartido por el grupo. ChatGPT/Codex apoyó la organización y redacción de esta página, la estructura HTML/CSS/JavaScript y la búsqueda/verificación de fuentes. Se usó un generador de imágenes para la ilustración de portada. La imagen es sintética, las dos voces territoriales son entrevistas simuladas y las cifras se enlazan a sus fuentes. El equipo debe revisar el contenido y validar cualquier cambio antes de entregar.</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container pb-5" id="fuentes">
+      <div class="sources">
+        <div class="section-head"><h2 class="h3">Fuentes</h2><span class="section-no">REFERENCIAS DE CIFRAS Y MÉTODOS</span></div>
+        <ol class="mb-0">
+          <li><a href="https://www.superservicios.gov.co/sites/default/files/2025-12/Informe-Nacional-de-Disposicion-Final-de-Residuos-Solidos-en-Combia-2024.pdf" target="_blank" rel="noopener">Superservicios. Informe Nacional de Disposición Final de Residuos Sólidos, 2024.</a></li>
+          <li><a href="https://www.superservicios.gov.co/sites/default/files/2025-12/Informe-sectorial-de-la-actividad-de-aprovechamiento-2024.pdf" target="_blank" rel="noopener">Superservicios. Informe sectorial de la actividad de aprovechamiento, 2024.</a></li>
+          <li><a href="https://alumni.berkeley.edu/california-magazine/2025-fall-winter/lost-leftovers/" target="_blank" rel="noopener">Berkeley Haas / California Magazine. “Lost Leftovers”, 2025.</a></li>
+          <li><a href="https://caracol.com.co/2026/10/21/se-fortalece-la-recoleccion-de-residuos-en-neiva-con-mas-vehiculos-operarios-y-nuevas-cestas/" target="_blank" rel="noopener">Caracol Radio. Recolección diaria y operación del servicio en Neiva, octubre de 2026.</a></li>
+          <li><a href="https://www.cam.gov.co/media/filer_public/ab/0e/ab0e3e59-d25e-4e71-b96a-c86ce93ebc5c/informe_auditoria_cumplimiento_cam_v2022_2023_2024.pdf" target="_blank" rel="noopener">CAM. Informe de auditoría de cumplimiento 2022–2024.</a></li>
+          <li><a href="https://www.povertyactionlab.org/evaluation/opower-evaluating-impact-home-energy-reports-energy-conservation-united-states" target="_blank" rel="noopener">J-PAL. Evaluación de los informes de energía de Opower.</a></li>
+          <li><a href="https://www.mintic.gov.co/portal/715/w3-article-437305.html" target="_blank" rel="noopener">MinTIC / DANE. Acceso a internet de los hogares.</a> · <a href="https://repository.unad.edu.co/handle/10596/74585" target="_blank" rel="noopener">UNAD. Estudio sobre residuos en Neiva, 2025.</a> · <a href="https://dialnet.unirioja.es/descarga/articulo/7453225.pdf" target="_blank" rel="noopener">Estudio sobre reciclaje en Neiva, 2020.</a></li>
+          <li><a href="https://news.wisc.edu/healthy-competition-makes-habit-of-sustainability/" target="_blank" rel="noopener">University of Wisconsin–Madison. Cool Choices y hábitos de sostenibilidad.</a></li>
+          <li><a href="https://www.iea.org/reports/energy-and-ai/executive-summary" target="_blank" rel="noopener">Agencia Internacional de Energía. Energy and AI, 2025.</a></li>
+          <li><a href="https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php/norma.php?i=49981" target="_blank" rel="noopener">Ley 1581 de 2012. Protección de datos personales, Gestor Normativo de Función Pública.</a></li>
+          <li><a href="https://greensoftware.foundation/standards/sci/" target="_blank" rel="noopener">Green Software Foundation. Software Carbon Intensity (SCI), ISO/IEC 21031:2024.</a></li>
+        </ol>
+      </div>
+    </section>
+  </main>
+  <footer class="py-4"><div class="container d-flex flex-wrap justify-content-between align-items-center gap-3"><div><a class="brand text-white" href="#inicio"><span class="brand-mark">↗</span><span>CÓDIGO CIRCULAR</span></a><div class="small mt-2">El código también pesa sobre el planeta.</div></div><div class="small">Ingeniería de Software · Periódico digital académico</div><a class="back-top" href="#inicio">Volver arriba ↑</a></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const progress = document.getElementById('readingProgress');
+    const updateProgress = () => {
+      const available = document.documentElement.scrollHeight - window.innerHeight;
+      progress.style.width = `${available > 0 ? Math.min(100, window.scrollY / available * 100) : 0}%`;
+    };
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    const number = id => Math.max(0, Number.parseFloat(document.getElementById(id).value) || 0);
+    const recalculate = () => {
+      const kg = number('weightInput');
+      const rejected = Math.min(100, number('rejectInput')) / 100;
+      const homes = Math.max(1, number('householdsInput'));
+      const net = kg * (1 - rejected);
+      const perHome = net / homes;
+      const format = value => new Intl.NumberFormat('es-CO', { minimumFractionDigits:1, maximumFractionDigits:1 }).format(value);
+      document.getElementById('netOutput').textContent = `${format(net)} kg · ${format(perHome)} kg/hogar`;
+    };
+    ['weightInput','rejectInput','householdsInput'].forEach(id => document.getElementById(id).addEventListener('input', recalculate));
+  </script>
+</body>
+</html>
